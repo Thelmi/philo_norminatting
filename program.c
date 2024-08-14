@@ -6,7 +6,7 @@
 /*   By: thelmy <thelmy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 19:59:17 by mrhelmy           #+#    #+#             */
-/*   Updated: 2024/08/13 23:37:33 by thelmy           ###   ########.fr       */
+/*   Updated: 2024/08/14 16:56:28 by thelmy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,6 @@ void	*life(void *philo_num)
 	return (NULL);
 }
 
-void	initializer(t_philo *philo, t_info *info, int i)
-{
-	philo->total_meals = 0;
-	philo->last_meal = 0;
-	philo->philo = i + 1;
-	philo->info = info;
-}
-
 int	creating_threads(pthread_t	*threads, t_info *info, t_philo		*philo)
 {
 	int i;
@@ -110,18 +102,22 @@ int	creating_threads(pthread_t	*threads, t_info *info, t_philo		*philo)
 			return (0);
 		i++;
 	}
+	return (1);
 }
+
 int	execution(t_info *info)
 {
 	pthread_t	threads[200];
 	t_philo		*philo;
 	int			i;
 
+	philo = NULL;
 	pthread_mutex_init(&info->death_lock, NULL);
 	pthread_mutex_init(&info->print_lock, NULL);
 	i = 0;
 	info->time_bc = time_now();
-	creating_threads(threads, info, philo);
+	if (!creating_threads(threads, info, philo))
+		return (0);
 	while (i < info->philos)
 	{
 		if (pthread_join(threads[i], NULL))

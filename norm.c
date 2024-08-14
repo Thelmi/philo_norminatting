@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   routine_utilities.c                                :+:      :+:    :+:   */
+/*   norm.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: thelmy <thelmy@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:34:30 by thelmy            #+#    #+#             */
-/*   Updated: 2024/08/14 18:43:40 by thelmy           ###   ########.fr       */
+/*   Updated: 2024/08/14 18:03:16 by thelmy           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,28 +90,24 @@ void	fork_check(t_philo **philo, int *fork1, int *fork2)
 {
 	if ((*philo)->philo == 1)
 	{
-		// (*fork1) = (*philo)->info->philos - 1;
-		// (*fork2) = (*philo)->philo - 1;
-		(*fork2) = (*philo)->info->philos - 1;
-		(*fork1) = (*philo)->philo - 1;
+		(*fork1) = (*philo)->info->philos - 1;
+		(*fork2) = (*philo)->philo - 1;
 	}
 	else
 	{
 		(*fork1) = (*philo)->philo - 2;
 		(*fork2) = (*philo)->philo - 1;
 	}
-	// if ((*fork1) < (*fork2))
-	// {
-	// 	pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork1)]);
-	// 	pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork2)]);
-	// }
-	// else
-	// {
-	// 	pthread_mutex_lock(&(*philo)->info->fork_lock[*fork2]);
-	// 	pthread_mutex_lock(&(*philo)->info->fork_lock[*fork1]);
-	// }
-	pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork1)]);
-	pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork2)]);
+	if ((*fork1) < (*fork2))
+	{
+		pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork1)]);
+		pthread_mutex_lock(&(*philo)->info->fork_lock[(*fork2)]);
+	}
+	else
+	{
+		pthread_mutex_lock(&(*philo)->info->fork_lock[*fork2]);
+		pthread_mutex_lock(&(*philo)->info->fork_lock[*fork1]);
+	}
 }
 
 int eating_routine(t_philo **philo, double timestamp_in_ms, int fork1, int fork2)
@@ -196,8 +192,8 @@ int	eating(t_philo **philo, double timestamp_in_ms)
 				return (1);
 			break ;
 		}
-		pthread_mutex_unlock(&(*philo)->info->fork_lock[fork1]);
 		pthread_mutex_unlock(&(*philo)->info->fork_lock[fork2]);
+		pthread_mutex_unlock(&(*philo)->info->fork_lock[fork1]);
 	}
 	return (0);
 }

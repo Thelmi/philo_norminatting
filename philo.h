@@ -57,4 +57,6 @@ int			print_status(t_philo **philo, double timestamp_in_ms, char *str);
 int			death_check(t_philo **philo, double timestamp_in_ms);
 int			eating(t_philo **philo, double timestamp_in_ms);
 int			sleeping(t_philo **philo, double timestamp_in_ms);
+void		initializer(t_philo *philo, t_info *info, int i);
+int			destroyer(t_info *info);
 #endif 
